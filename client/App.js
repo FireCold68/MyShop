@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
 
 export default function App() {
   
@@ -11,19 +11,18 @@ export default function App() {
   },[]);
 
   const getData = async() => {
-    const url = "htttp://localhost:3001/api/products/sayHello";
-    const response = fetch(url, {
+    const url = "htttp://192.168.1.1:3001/api/products/sayHello";
+    const response = await fetch(url, {
       method: 'get'
     });
-    const data = (await response).json();
-
-    console.log(data)
+    const data = await response.json();
+    setMessage(data.message)
 
   }
 
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Text>{message}</Text>
     </View>
   );
 }
