@@ -1,15 +1,31 @@
-import express  from "express";
+import  Express  from "express";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import ProductsRoute from './controllers/product.js'
-dotenv.config();
+const cors = require("cors");
+require("dotenv/config");
+const authJwt = require("./helpers/jwt");
+const error = require("./helpers/error.js");
+const multer = require("multer");
 
-const app = express();
+app.use(cors());
+app.options("*", cors());
 
-app.use(express.urlencoded({extended:false}));
-app.use(express.json());
+//middleware
+app.use(bodyParser.json());
+app.use(authJwt());
+app.use(error);
 
-app.use('/api/products', ProductsRoute);
+//Routes
+const categoriesRoutes = require("./routes/categories");
+const productsRoutes = require("./routes/products");
+const usersRoutes = require("./routes/users");
+const orderRoutes = require("./routes/orders");
+
+const api = process.env.API_URL;
+
+app.use(`${api}/categories`, categoriesRoutes);
+app.use(`${api}/products`, productsRoutes);
+app.use(`${api}/users`, usersRoutes);
+app.use(`${api}/orders`, orderRoutes);
 
 mongoose.connect(process.env.MONGO_URL)
 .then(results => {
